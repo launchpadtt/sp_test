@@ -1,4 +1,4 @@
 shapeways_test
 ==============
 
-Interview Test for Shapeways
+Interview Test
