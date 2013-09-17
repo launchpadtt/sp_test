@@ -1,4 +1,4 @@
-shapeways_test
+sp_test
 ==============
 
 Interview Test
