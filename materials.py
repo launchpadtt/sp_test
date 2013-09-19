@@ -3,7 +3,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
-class PreviewsTests(unittest.TestCase):  
+class MaterialsTests(unittest.TestCase):  
     def setUp(self):
         self.driver = webdriver.Firefox()
 
