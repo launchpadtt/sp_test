@@ -4,6 +4,14 @@ When one attempts to go to the Contact designer page when not logged in, it take
 
 When one has an item in the wishlist, and you click the added to wishlist link, it doesn't show up in the wishlist list, and you have to click the wishlist link again for it to show up
 
+Challenges
+
+Some unpleasant looking XPaths are being used to address elements in the page, and I learnt a few new XPath tricks since it can be difficult to address an element without a simple id tag
+
+It's clear that a class needed to be written to encapsulate the operations of interacting with this web page for the sake of the code being DRY and abstracting away repeated code. I forsook that so I could get all the testcases done by the end of the week. I will be creating that class over the weekend and since most likely noone will get a chance to take a look at it this week, I'll most likely resubmit an updated version with that encapsulation present
+
+Same thing goes for data. The data like login information and tags is hard-coded into the testcases
+
 Load
 
 Verify that page loads correctly
@@ -81,6 +89,8 @@ Comment
 Attempt to add a comment when not logged in
 
 Attempt to add a comment
+
+Comment with a picture
 
 Add a comment with an @reply
 
