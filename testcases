@@ -1,3 +1,9 @@
+Bugs & Inconsistencies
+
+When one attempts to go to the Contact designer page when not logged in, it takes you to the log in page, but doing anything else when not logged in takes you to the sign up page. they should be consistent. either they should all be sign up or all be login
+
+When one has an item in the wishlist, and you click the added to wishlist link, it doesn't show up in the wishlist list, and you have to click the wishlist link again for it to show up
+
 Load
 
 Verify that page loads correctly
