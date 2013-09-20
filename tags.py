@@ -21,6 +21,7 @@ class TagTests(unittest.TestCase):
             a_tags.append(a_tag_text)
         expected_a_tags = [u'Art', u'Accessories', u'Sculptures', u'For Your Home', u'Beer', u'Grumpy', u'Homebrew']
         self.assertEqual(sorted(a_tags), sorted(expected_a_tags), "The list of tags are not the expected list")
+        driver.close()
 
     def test_verify_product_in_tag_list(self):
         driver = self.driver
@@ -34,7 +35,6 @@ class TagTests(unittest.TestCase):
         self.assertIn("by ShapewaysCodeTest", driver.page_source)
         self.assertIn("This is one grumpy taphandle", driver.page_source)
         
-
     def tearDown(self):
         self.driver.close()
 
