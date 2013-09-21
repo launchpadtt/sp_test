@@ -7,7 +7,7 @@ Interview Test
 USAGE
 ----------------------------------------------------------------------------------
 
-These testcases were written using Python 2.7.4 on Ubuntu Linux. The git log shows that it was worked on over the course of 3 days, from Wednesday to Friday.
+These testcases were written using Python 2.7.4 on Ubuntu Linux. The git log shows that it was worked on over the course of 3 days, from Wednesday 18th to Friday 20th.
 
 Installation of dependencies on Linux
 
