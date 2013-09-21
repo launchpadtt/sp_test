@@ -7,7 +7,7 @@ Interview Test
 USAGE
 ----------------------------------------------------------------------------------
 
-These testcases were written using Python 2.7.4 on Ubuntu Linux.
+These testcases were written using Python 2.7.4 on Ubuntu Linux. The git log shows that it was worked on over the course of 3 days, from Wednesday to Friday.
 
 To run all testcases
 
@@ -23,7 +23,7 @@ python <test-suite>.py
 TESTCASES
 ----------------------------------------------------------------------------------
 
-There are 31 testcases in the test plan. They are listed in the file named testcases
+There are 31 testcases in the sanity test plan.
 
 They are the following:
 * Add a comment when not logged in
@@ -73,7 +73,7 @@ BUGS
 Two low severity issues were found on the page. They're summaries are below
 
 When one attempts to go to the Contact designer page when not logged in, it takes you to the log in page, but doing anything else when not logged in takes you to the sign up page. they should be consistent. either they should all be sign up or all be login
-
+ratings.py
 When one has an item in the wishlist, and you click the added to wishlist link, it doesn't show up in the wishlist list, and you have to click the wishlist link again for it to show up
 
 ----------------------------------------------------------------------------------
@@ -85,6 +85,8 @@ Most of the challenges were in addressed page elements that didn't have unique i
 This is how I ended up with clever and/or unpleasant looking XPaths like these:
 //strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']
 //div[@id='favoriters']/following-sibling::div[1]/div[@class='grid-view']/div/div
+
+Also was there a slight redesign of the product page while I was working on the testcases? The ratings feature disappeared while I was working on the testcases.
 
 ----------------------------------------------------------------------------------
 FLAWS AND FUTURE CHANGES
