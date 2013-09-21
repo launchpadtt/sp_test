@@ -10,6 +10,7 @@ class FavoritesTests(unittest.TestCase):
 
     def test_favorite_when_not_logged_in(self):
         driver = self.driver
+        driver.implicitly_wait(10)
         driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
         # check the number of favorites before logging in
         favorites_count_elem = driver.find_element_by_xpath("//a[@id='favoritesLink']//div[@class='counter']")
@@ -17,7 +18,7 @@ class FavoritesTests(unittest.TestCase):
         # favorite the item
         favorites_elem = driver.find_element_by_xpath("//a[@id='favoritesLink']")
         favorites_elem.click()
-        time.sleep(2)
+        time.sleep(5)
         # check whether you're at the sign up screen or whether you're still at the product page
         self.assertIn("Log In", driver.page_source)
         self.assertIn("Sign Up!", driver.page_source)
@@ -76,7 +77,7 @@ class FavoritesTests(unittest.TestCase):
         no_of_favorites_after = favorites_count_elem.text
         self.assertEqual(str(int(no_of_favorites_before) + 1), str(no_of_favorites_after), "The number of favorites before is not one less than the number of favorites after. Before: '" + str(no_of_favorites_before) + "' After: '" + str(no_of_favorites_after) + "'")
         driver.close()
-         
+          
     def test_unfavorite_when_logged_in(self):
         driver = self.driver
         driver.implicitly_wait(10)
@@ -118,7 +119,7 @@ class FavoritesTests(unittest.TestCase):
         no_of_favorites_after = favorites_count_elem.text
         self.assertEqual(str(no_of_favorites_before), str(int(no_of_favorites_after) + 1), "The number of favorites after is not one less than the number of favorites before. Before: '" + str(no_of_favorites_before) + "' After: '" + str(no_of_favorites_after) + "'")
         driver.close()
-        
+         
     def tearDown(self):
         self.driver.close()
 

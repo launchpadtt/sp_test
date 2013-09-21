@@ -10,7 +10,7 @@ class ContactTests(unittest.TestCase):
     def test_contact_designer_when_not_logged_in(self):
         driver = self.driver
         driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        elem = driver.find_element_by_xpath("//div[@class='send-message']/a[@class='secondary-button-inset']")
+        elem = driver.find_element_by_xpath("//div[@class='send-message']/a")
         elem.click()
         time.sleep(2)
         self.assertIn("Log In", driver.page_source)
@@ -34,7 +34,7 @@ class ContactTests(unittest.TestCase):
         log_in_elem.click()
         time.sleep(2)
         # hit contact designer
-        elem = driver.find_element_by_xpath("//div[@class='send-message']/a[@class='secondary-button-inset']")
+        elem = driver.find_element_by_xpath("//div[@class='send-message']/a")
         elem.click()
         time.sleep(2)
         # fill in the information

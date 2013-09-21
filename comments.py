@@ -9,7 +9,9 @@ class CommentsTests(unittest.TestCase):
 
     def test_comment_when_not_logged_in(self):
         driver = self.driver
+        driver.implicitly_wait(10)
         driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
+        time.sleep(5)
         comment_textarea_elem = driver.find_element_by_id("commentBox")
         comment_textarea_elem.click()
         comment_textarea_elem.send_keys("Test Comment")
