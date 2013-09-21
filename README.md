@@ -9,6 +9,19 @@ USAGE
 
 These testcases were written using Python 2.7.4 on Ubuntu Linux. The git log shows that it was worked on over the course of 3 days, from Wednesday to Friday.
 
+Installation of dependencies on Linux
+
+sudo apt-get install setuptools
+sudo easy_install selenium
+
+Then go to here and download the selenium jar file
+http://docs.seleniumhq.org/download/
+Then run it with java -jar selenium-server-standalone-2.3.5.jar
+
+The Chrome and IE Drivers are located here
+https://code.google.com/p/chromedriver/
+https://code.google.com/p/selenium/wiki/InternetExplorerDriver
+
 To run all testcases
 
 (When in the parent folder of the folder with the testcases)
