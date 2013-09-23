@@ -1,225 +1,140 @@
+import taphandle
 import unittest
 import time
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
 
 class CommentsTests(unittest.TestCase):  
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.taphandle = taphandle.TapHandle("chrisyeem_test", "test_password")
 
     def test_comment_when_not_logged_in(self):
-        driver = self.driver
-        driver.implicitly_wait(10)
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
+        print "\nRunning the testcase 'Comment when not logged in'"
+        taphandle = self.taphandle
+        taphandle.load()
         time.sleep(5)
-        comment_textarea_elem = driver.find_element_by_id("commentBox")
-        comment_textarea_elem.click()
-        comment_textarea_elem.send_keys("Test Comment")
-        comment_textarea_elem = driver.find_element_by_id("submitComment")
-        comment_textarea_elem.click()
-        self.assertIn("Log In", driver.page_source)
-        driver.close()
+        taphandle.fill_out_comment("Test Comment")
+        print "  Checking that the page has 'Log In' in it"
+        self.assertIn("Log In", taphandle.get_page_source())
+        taphandle.close_session()
           
     def test_comment(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        sign_in_elem = driver.find_element_by_link_text("Sign in")
-        hover = ActionChains(driver).move_to_element(sign_in_elem)
-        hover.perform()
-        # fill out the username and password
-        username_elem = driver.find_element_by_id("top_username")
-        username_elem.send_keys("chrisyeem_test")
-        password_elem = driver.find_element_by_id("top_password")
-        password_elem.send_keys("test_password")
-        # login
-        log_in_elem = driver.find_element_by_xpath("//input[@value='Log in']")
-        log_in_elem.click()
-        time.sleep(2)
+        print "\nRunning the testcase 'Comment when logged in'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Logging in"
+        taphandle.login()
         # check the counter for the comments
-        counter_elem = driver.find_element_by_xpath("//a[@class='add-to-comments']/div")
-        comments_counter_before = counter_elem.text
+        print "  Getting current number of comments"
+        comments_counter_before = taphandle.get_comments_counter()
         # fill in the comment
-        comment_textarea_elem = driver.find_element_by_id("commentBox")
-        comment_textarea_elem.click()
-        comment_textarea_elem.send_keys("Test Comment")
-        comment_textarea_elem = driver.find_element_by_id("submitComment")
-        comment_textarea_elem.click()
-        time.sleep(2)
+        print "  Filling out the comment"
+        taphandle.fill_out_comment("Test Comment")
         # check that the comment is good
-        comment_text_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']")
-        comment_text = comment_text_elem.text
+        comment_text = taphandle.get_comment_text()
+        print "  Checking that the comment is the expected comment"
         self.assertEqual(comment_text, "Test Comment", "There's no comment that was made by chrisyeem_test that matches the required text comment details")
         # check the counter for the comments
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        counter_elem = driver.find_element_by_xpath("//a[@class='add-to-comments']/div")
-        comments_counter_after = counter_elem.text
+        taphandle.reload()
+        comments_counter_after = taphandle.get_comments_counter()
         # check that the counter on the side has been incremented by one
+        print "  Comparing the comments counter so that the comments before is one less than after"
         self.assertEqual(str(int(comments_counter_before) + 1), comments_counter_after, "The number of comments in the counter is not the incremented by one after adding the comment. Before: '" + comments_counter_before + "' After: '" + comments_counter_after + "'")
         # delete the comment for cleanup
         if (comment_text == "Test Comment"):
-            delete_comment_button_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../../div[@class='comment-wrap']/div[@class='clearfix']/div[@class='comment-tools']/div/a")
-            hover = ActionChains(driver).move_to_element(delete_comment_button_elem)
-            hover.perform()
-            delete_comment_button_elem.click()
-            alert_dialog = driver.switch_to_alert()
-            alert_dialog.accept()
-        driver.close()
+            taphandle.delete_comment()
+        taphandle.close_session()
            
     def test_delete_a_comment(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        sign_in_elem = driver.find_element_by_link_text("Sign in")
-        hover = ActionChains(driver).move_to_element(sign_in_elem)
-        hover.perform()
-        # fill out the username and password
-        username_elem = driver.find_element_by_id("top_username")
-        username_elem.send_keys("chrisyeem_test")
-        password_elem = driver.find_element_by_id("top_password")
-        password_elem.send_keys("test_password")
-        # login
-        log_in_elem = driver.find_element_by_xpath("//input[@value='Log in']")
-        log_in_elem.click()
-        time.sleep(2)
+        print "\nRunning the testcase 'Delete a comment'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Logging in"
+        taphandle.login()
         # fill in the comment
-        comment_textarea_elem = driver.find_element_by_id("commentBox")
-        comment_textarea_elem.click()
-        comment_textarea_elem.send_keys("Test Comment to delete")
-        comment_textarea_elem = driver.find_element_by_id("submitComment")
-        comment_textarea_elem.click()
-        time.sleep(2)
+        print "  Filling out the comment"
+        taphandle.fill_out_comment("Test Comment to delete")
         # check that the comment is good
-        comment_text_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']")
-        comment_text = comment_text_elem.text
+        comment_text = taphandle.get_comment_text()
         self.assertEqual(comment_text, "Test Comment to delete", "There's no comment that was made by chrisyeem_test that matches the required text comment details")
         # check the counter for the comments
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        counter_elem = driver.find_element_by_xpath("//a[@class='add-to-comments']/div")
-        comments_counter_before = counter_elem.text
+        taphandle.reload()
+        print "  Getting number of comments before the delete"
+        comments_counter_before = taphandle.get_comments_counter()
         # delete the comment for cleanup
         if (comment_text == "Test Comment to delete"):
-            delete_comment_button_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../../div[@class='comment-wrap']/div[@class='clearfix']/div[@class='comment-tools']/div/a")
-            hover = ActionChains(driver).move_to_element(delete_comment_button_elem)
-            hover.perform()
-            delete_comment_button_elem.click()
-            alert_dialog = driver.switch_to_alert()
-            alert_dialog.accept()
+            taphandle.delete_comment()
 #             driver.switch_to_window("TapHandle by ShapewaysCodeTest on Shapeways - Mozilla Firefox")
             try:
-                comment_text_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']")
+                comment_text = taphandle.get_comment_text()
             except:
                 self.fail("There's still a comment that was created by chrisyeem_test, after attempting to delete the comment")
         # check the counter for the comments
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        counter_elem = driver.find_element_by_xpath("//a[@class='add-to-comments']/div")
-        comments_counter_after = counter_elem.text
+        taphandle.reload()
+        print "  Getting the number of comments after the delete"
+        comments_counter_after = taphandle.get_comments_counter()
         # check that the counter on the side has been incremented by one
+        print "  Checking that the number of comments after is one less than before"
         self.assertEqual(comments_counter_before, str(int(comments_counter_after) + 1), "The number of comments in the counter is not the incremented by one after adding the comment. Before: '" + comments_counter_before + "' After: '" + comments_counter_after + "'")
-        driver.close()
+        taphandle.close_session()
    
     def test_comment_with_at_reply(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        sign_in_elem = driver.find_element_by_link_text("Sign in")
-        hover = ActionChains(driver).move_to_element(sign_in_elem)
-        hover.perform()
-        # fill out the username and password
-        username_elem = driver.find_element_by_id("top_username")
-        username_elem.send_keys("chrisyeem_test")
-        password_elem = driver.find_element_by_id("top_password")
-        password_elem.send_keys("test_password")
-        # login
-        log_in_elem = driver.find_element_by_xpath("//input[@value='Log in']")
-        log_in_elem.click()
-        time.sleep(2)
+        print "\nRunning the testcase 'Comment with an @reply'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Logging in"
+        taphandle.login()
         # check the counter for the comments
-        counter_elem = driver.find_element_by_xpath("//a[@class='add-to-comments']/div")
-        comments_counter_before = counter_elem.text
+        print "  Getting current number of comments"
+        comments_counter_before = taphandle.get_comments_counter()
         # fill in the comment
-        comment_textarea_elem = driver.find_element_by_id("commentBox")
-        comment_textarea_elem.click()
-        comment_textarea_elem.send_keys("@chrisyeem_test Test Comment")
-        comment_textarea_elem = driver.find_element_by_id("submitComment")
-        comment_textarea_elem.click()
-        time.sleep(2)
+        print "  Adding comment with @reply"
+        taphandle.fill_out_comment("@chrisyeem_test Test Comment")
         # check that the comment is good
-        comment_text_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']")
-        comment_text = comment_text_elem.text
+        comment_text = taphandle.get_comment_text()
+        print "  Checking that the comment text is right"
         self.assertEqual(comment_text, "@chrisyeem_test Test Comment", "There's no comment that was made by chrisyeem_test that matches the required text comment details Comment Text: '" + comment_text + "'")
-        comment_at_reply_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']/a")
+        print "  Checking that the comment href is correct"
+        comment_at_reply_elem = taphandle.driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']/a")
         comment_at_reply_href = comment_at_reply_elem.get_attribute("href")
         self.assertEqual(comment_at_reply_href, "https://www.shapeways.com/designer/chrisyeem_test", "The @reply does not point to the user's appropriate profile page. href: '" + comment_at_reply_href + "'")
         # check the counter for the comments
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        counter_elem = driver.find_element_by_xpath("//a[@class='add-to-comments']/div")
-        comments_counter_after = counter_elem.text
+        taphandle.reload()
+        print "  Getting the number of comments after adding the comment"
+        comments_counter_after = taphandle.get_comments_counter()
         # check that the counter on the side has been incremented by one
+        print "  Checking that the number of comments before is one less than after"
         self.assertEqual(str(int(comments_counter_before) + 1), comments_counter_after, "The number of comments in the counter is not the incremented by one after adding the comment. Before: '" + comments_counter_before + "' After: '" + comments_counter_after + "'")
         # delete the comment for cleanup
-        if (comment_text == "Test Comment"):
-            delete_comment_button_elem = driver.find_element_by_xpath("//strong[text() = 'chrisyeem_test']/../../../../../div[@class='comment-wrap']/div[@class='clearfix']/div[@class='comment-tools']/div/a")
-            hover = ActionChains(driver).move_to_element(delete_comment_button_elem)
-            hover.perform()
-            delete_comment_button_elem.click()
-            alert_dialog = driver.switch_to_alert()
-            alert_dialog.accept()
-        driver.close()
+        if (comment_text == "@chrisyeem_test Test Comment"):
+            print "  Deleting the comment for cleanup"
+            taphandle.delete_comment()
+        taphandle.close_session()
           
     def test_reply_button_to_an_existing_comment(self):
-        driver = self.driver
-        driver.implicitly_wait(10)
-        driver.maximize_window()
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        sign_in_elem = driver.find_element_by_link_text("Sign in")
-        hover = ActionChains(driver).move_to_element(sign_in_elem)
-        hover.perform()
-        # fill out the username and password
-        username_elem = driver.find_element_by_id("top_username")
-        username_elem.send_keys("chrisyeem_test")
-        password_elem = driver.find_element_by_id("top_password")
-        password_elem.send_keys("test_password")
-        # login
-        log_in_elem = driver.find_element_by_xpath("//input[@value='Log in']")
-        log_in_elem.click()
-        time.sleep(2)
+        print "\nRunning the testcase 'Reply button to an existing comment'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Logging in"
+        taphandle.login()
         # click the reply button on the first reply by user named abbad
-        reply_button_elem = driver.find_element_by_xpath("//strong[text() = 'abbad']/../../../../../div[@class='comment-wrap']/div[@class='comment-actions']/div[@class='comment-reply']/a")
-        reply_button_elem.click()
-        time.sleep(2)
+        taphandle.reply_comment("abbad")
         # check the text box
-        comment_textarea_elem = driver.find_element_by_id("commentBox")
+        comment_textarea_elem = taphandle.driver.find_element_by_id("commentBox")
         comment_text = comment_textarea_elem.get_attribute("value")
         self.assertEqual(comment_text, "@abbad ", "There's no comment that was made by chrisyeem_test that matches the required text comment details Comment Text: '" + comment_text + "'")
-        driver.close()
+        taphandle.close_session()
       
     def test_flag_a_comment(self):
-        driver = self.driver
-        driver.implicitly_wait(10)
-        driver.maximize_window()
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        sign_in_elem = driver.find_element_by_link_text("Sign in")
-        hover = ActionChains(driver).move_to_element(sign_in_elem)
-        hover.perform()
-        # fill out the username and password
-        username_elem = driver.find_element_by_id("top_username")
-        username_elem.send_keys("chrisyeem_test")
-        password_elem = driver.find_element_by_id("top_password")
-        password_elem.send_keys("test_password")
-        # login
-        log_in_elem = driver.find_element_by_xpath("//input[@value='Log in']")
-        log_in_elem.click()
-        time.sleep(2)
-        # click the reply button on the first reply by user named abbad
-        flag_button_elem = driver.find_element_by_xpath("//strong[text() = 'abbad']/../../../../../div[@class='comment-wrap']/div[@class='clearfix']/div[@class='comment-tools']/div/a")
-        hover = ActionChains(driver).move_to_element(flag_button_elem)
-        hover.perform()
-        flag_button_elem.click()
-        time.sleep(2)
+        print "\nRunning the testcase 'Reply button to an existing comment'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Logging in"
+        taphandle.login()
+        # click the flag button on the first reply by user named abbad
+        taphandle.flag_comment("abbad")
         # check the text box
-        self.assertIn("Shapeways", driver.title)
-        self.assertIn("Flag this model as inappropriate", driver.page_source)
-
-    def tearDown(self):
-        self.driver.close()
+        self.assertIn("Shapeways", taphandle.get_page_title())
+        self.assertIn("Flag this model as inappropriate", taphandle.get_page_source())
+        taphandle.close_session()
 
 if __name__ == "__main__":
     unittest.main()

@@ -320,3 +320,87 @@ class TapHandle:
         homebrew_a_tag_elem = driver.find_element_by_xpath(tag_link_xpath)
         homebrew_a_tag_elem.click()
         time.sleep(2)
+
+    def fill_out_comment(self, comment):
+        driver = self.driver
+        print "    Filling out the comment text box"
+        comment_textarea_elem = driver.find_element_by_id("commentBox")
+        comment_textarea_elem.click()
+        comment_textarea_elem.send_keys(comment)
+        print "    Clicking the comment button"
+        comment_textarea_elem = driver.find_element_by_id("submitComment")
+        comment_textarea_elem.click()
+        time.sleep(2)
+        
+    def get_comments_counter(self):
+        driver = self.driver
+        comments_counter_xpath = "//a[@class='add-to-comments']/div"
+        print "    Getting the number of comments located at " + comments_counter_xpath
+        counter_elem = driver.find_element_by_xpath(comments_counter_xpath)
+        comments_counter = counter_elem.text
+        return comments_counter
+        
+    def get_comment_text(self):
+        driver = self.driver
+        comment_text_xpath = "//strong[text() = '" + self.username + "']/../../../../div[@class='comment-body']/div[@class='comment-text']"
+        print "    Getting the codriver.page_sourcemment text of the earliest comment by the logged in user located at " + comment_text_xpath
+        comment_text_elem = driver.find_element_by_xpath(comment_text_xpath)
+        comment_text = comment_text_elem.text
+        return comment_text
+
+    def delete_comment(self):
+        driver = self.driver
+        delete_button_xpath = "//strong[text() = '" + self.username + "']/../../../../../div[@class='comment-wrap']/div[@class='clearfix']/div[@class='comment-tools']/div/a"
+        print "    Clicking the delete button located at " + delete_button_xpath
+        delete_comment_button_elem = driver.find_element_by_xpath(delete_button_xpath)
+        hover = ActionChains(driver).move_to_element(delete_comment_button_elem)
+        hover.perform()
+        delete_comment_button_elem.click()
+        print "    Confirming deletion of comment"
+        alert_dialog = driver.switch_to_alert()
+        alert_dialog.accept()
+
+    def reply_comment(self, user):
+        driver = self.driver
+        reply_button_xpath = "//strong[text() = '" + user + "']/../../../../../div[@class='comment-wrap']/div[@class='comment-actions']/div[@class='comment-reply']/a"
+        print "    Clicking the reply button located at " + reply_button_xpath
+        reply_button_elem = driver.find_element_by_xpath(reply_button_xpath)
+        reply_button_elem.click()
+        time.sleep(2)
+
+    def flag_comment(self, user):
+        driver = self.driver
+        flag_button_xpath = "//strong[text() = '" + user + "']/../../../../../div[@class='comment-wrap']/div[@class='clearfix']/div[@class='comment-tools']/div/a"
+        print "    Clicking the flag button located at " + flag_button_xpath
+        flag_button_elem = driver.find_element_by_xpath(flag_button_xpath)
+        hover = ActionChains(driver).move_to_element(flag_button_elem)
+        hover.perform()
+        flag_button_elem.click()
+        time.sleep(2)
+
+    def get_big_image_url(self):
+        driver = self.driver
+        big_image_xpath = "//div[@id='slideshow-big']//img[@class='film-strip-img']"
+        print "    Getting the URL for the made image"
+        big_image_elem = driver.find_element_by_xpath(big_image_xpath)
+        big_image_url = big_image_elem.get_attribute("src")
+        return big_image_url
+
+    def select_image(self, number):
+        driver = self.driver
+        thumbnail_id = "picThumb" + number
+        print "    Selecting thumbnail image by id " + thumbnail_id
+        first_image_elem = driver.find_element_by_id(thumbnail_id)
+        first_image_elem.click()
+
+    def select_image_next_button(self):
+        driver = self.driver
+        print "    Selecting the image next button"
+        first_image_elem = driver.find_element_by_id("slideShowRight")
+        first_image_elem.click()
+
+    def select_image_back_button(self):
+        driver = self.driver
+        print "    Selecting the image back button"
+        first_image_elem = driver.find_element_by_id("slideShowLeft")
+        first_image_elem.click()

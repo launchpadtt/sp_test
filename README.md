@@ -32,6 +32,13 @@ To run an individual test suite
 (When in the folder with the testcases)
 python <test-suite>.py
 
+When running testcases if a testcase passed, there will be a dot on the line that follows the steps
+.
+If it fails there will be an F
+F
+If there was an error which could be because of a bug in the taphandle page, or a bug in the test script, there will be an E
+E
+
 ----------------------------------------------------------------------------------
 TESTCASES
 ----------------------------------------------------------------------------------
@@ -83,28 +90,33 @@ They are the following:
 BUGS
 ----------------------------------------------------------------------------------
 
-Two low severity issues were found on the page. They're summaries are below
+Two low severity issues were found on the page. Their summaries are below
 
-When one attempts to go to the Contact designer page when not logged in, it takes you to the log in page, but doing anything else when not logged in takes you to the sign up page. they should be consistent. either they should all be sign up or all be login
+When one attempts to go to the Contact designer page when not logged in, it takes you to the log in page, but doing anything else when not logged in takes you to the sign up page. They should be consistent. Either they should all be sign up or all be login
 ratings.py
-When one has an item in the wishlist, and you click the added to wishlist link, it doesn't show up in the wishlist list, and you have to click the wishlist link again for it to show up
+
+When one has an item in the wishlist, and you click the link named "Added to Wishlist", it doesn't show up in the page that follows, and you have to click the wishlist link again in that page for it to show up
 
 ----------------------------------------------------------------------------------
 CHALLENGES
 ----------------------------------------------------------------------------------
 
-Most of the challenges were in addressed page elements that didn't have unique identier attributes. Most of the new XPath features that I learnt pertained to addressing items like this.
+Most of the challenges were in addressed page elements that didn't have unique identifier attributes. Most of the new XPath features that I learnt pertained to addressing items like this.
 
 This is how I ended up with clever and/or unpleasant looking XPaths like these:
 //strong[text() = 'chrisyeem_test']/../../../../div[@class='comment-body']/div[@class='comment-text']
 //div[@id='favoriters']/following-sibling::div[1]/div[@class='grid-view']/div/div
 
-Also was there a slight redesign of the product page while I was working on the testcases? The ratings feature disappeared while I was working on the testcases.
+Also was there a slight redesign of the product page while I was working on the testcases? The ratings feature disappeared in the middle of me working on it.
 
 ----------------------------------------------------------------------------------
 FLAWS AND FUTURE CHANGES
 ----------------------------------------------------------------------------------
 
+EDIT: Since the first submission, the encapsulation issue has been fixed, and all the operations to interact with the page have been moved to a TapHandle class
+
 It's clear that a class needed to be written to encapsulate the operations of interacting with this web page for the sake of the code being DRY and abstracting away repeated code. I forsook that so I could get all the test coverage done by the end of the week. I will be creating that class over the weekend. I'll most likely resubmit an updated version with that encapsulation present
 
 Same thing goes for data. The data like login information and tags are hard-coded into the testcases
+
+There are two test suites that I couldn't cover in time. The sanity testcases for the Buy button and for the Share links. All of the other operations surrounding it like the materials and country links have been covered.
