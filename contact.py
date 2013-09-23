@@ -1,59 +1,46 @@
+import taphandle
 import unittest
-import time
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
 
 class ContactTests(unittest.TestCase):  
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.taphandle = taphandle.TapHandle("chrisyeem_test", "test_password")
     
     def test_contact_designer_when_not_logged_in(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        elem = driver.find_element_by_xpath("//div[@class='send-message']/a")
-        elem.click()
-        time.sleep(2)
-        self.assertIn("Log In", driver.page_source)
-        self.driver.close()
+        print "\nRunning the testcase 'Contact the Designer when not logged in'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Clicking contact designer"
+        taphandle.click_contact_designer()
+        print "  Looking for the string 'Log In' in the page source"
+        self.assertIn("Log In", taphandle.get_page_source())
+        taphandle.close_session()
         
 
     def test_contact_designer_when_logged_in(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        # get the login dialog to display
-        sign_in_elem = driver.find_element_by_link_text("Sign in")
-        hover = ActionChains(driver).move_to_element(sign_in_elem)
-        hover.perform()
-        # fill out the username and password
-        username_elem = driver.find_element_by_id("top_username")
-        username_elem.send_keys("chrisyeem_test")
-        password_elem = driver.find_element_by_id("top_password")
-        password_elem.send_keys("test_password")
-        # login
-        log_in_elem = driver.find_element_by_xpath("//input[@value='Log in']")
-        log_in_elem.click()
-        time.sleep(2)
+        print "\nRunning the testcase 'Contact the Designer when logged in'"
+        taphandle = self.taphandle
+        taphandle.load()
+        print "  Logging in"
+        taphandle.login()
         # hit contact designer
-        elem = driver.find_element_by_xpath("//div[@class='send-message']/a")
-        elem.click()
-        time.sleep(2)
+        print "  Clicking contact designer"
+        taphandle.click_contact_designer()
+        
         # fill in the information
-        subject_elem = driver.find_element_by_xpath("//input[@name='msg_subject']")
-        subject_elem.send_keys("Test Subject")
-        body_elem = driver.find_element_by_id("txtb")
-        body_elem.send_keys("Test Body")
-        send_message_elem = driver.find_element_by_link_text("Send Message")
-        send_message_elem.click()
+        print "  Filling in basic information for a message"
+        taphandle.fill_in_contact_designer_message("Test Subject", "Test Message")
         # check that it took you to the Inbox page
-        self.assertIn("Inbox", driver.page_source)
+        print "  Looking for the string 'Inbox' in the page source"
+        self.assertIn("Inbox", taphandle.get_page_source())
         # check that sent folder to see if you actually sent that message 
-        driver.find_element_by_xpath("//select[@name='folder_id']/option[text()='Sent']").click()
-        go_link_elem = driver.find_element_by_xpath("//form//a[text()='Go']")
-        go_link_elem.click()
-        self.assertIn("Test Subject", driver.page_source)
+        print "  Accessing sent messages"
+        taphandle.access_sent_messages()
+        print "  Looking for the string 'Test Subject' in the page source"
+        self.assertIn("Test Subject", taphandle.get_page_source())
+        taphandle.close_session()
 
-    def tearDown(self):
-        self.driver.close()
+#     def tearDown(self):
+#         self.taphandle.close_session()
 
 if __name__ == "__main__":
     unittest.main()

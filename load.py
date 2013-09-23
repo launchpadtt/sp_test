@@ -1,20 +1,24 @@
+import taphandle
 import unittest
-from selenium import webdriver
 
 class LoadTests(unittest.TestCase):  
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.taphandle = taphandle.TapHandle("chrisyeem_test", "test_password", "Firefox")
     
     def test_verify_page_loads(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
-        self.assertIn("TapHandle by ShapewaysCodeTest on Shapeways", driver.title)
-        elem = driver.find_element_by_xpath("//div[@class='shop-info-title']//h2")
-        self.assertIn("TapHandle", elem.text)
+        print "\nRunning the testcase 'Verify that the page loads'"
+        taphandle = self.taphandle
+        taphandle.load()
+        page_title = taphandle.get_page_title()
+        print "  Looking for the title 'TapHandle by ShapewaysCodeTest on Shapeways' in the page title"
+        self.assertIn("TapHandle by ShapewaysCodeTest on Shapeways", page_title)
+        page_heading = taphandle.get_page_heading()
+        print "  Looking for the page heading 'TapHandle' in the page header"
+        self.assertIn("TapHandle", page_heading)
 
     def tearDown(self):
-        self.driver.close()
-
+        self.taphandle.close_session()
+        
 if __name__ == "__main__":
     unittest.main()
     
