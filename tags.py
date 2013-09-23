@@ -1,42 +1,43 @@
+import taphandle
 import unittest
-import time
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-import re
 
 class TagTests(unittest.TestCase):  
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.taphandle = taphandle.TapHandle("chrisyeem_test", "test_password")
 
     def test_verify_tags_list(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
+        print "\nRunning the testcase 'Verify tag list is the expected list'"
+        taphandle = self.taphandle
+        taphandle.load()
         # get the list of tags
-        tags_elems = driver.find_elements_by_xpath("//div[@class='keywords']//a")
-        a_tags = []
-        for a_tag_elem in tags_elems:
-            a_tag_text = a_tag_elem.text
-            a_tag_text = re.sub(',', '', a_tag_text)
-            a_tags.append(a_tag_text)
+        print "  Getting the items tags"
+        a_tags = taphandle.get_tag_list()    
         expected_a_tags = [u'Art', u'Accessories', u'Sculptures', u'For Your Home', u'Beer', u'Grumpy', u'Homebrew']
+        print "  Comparing the tags against the expected tags"
         self.assertEqual(sorted(a_tags), sorted(expected_a_tags), "The list of tags are not the expected list")
-        driver.close()
+        taphandle.close_session()
 
     def test_verify_product_in_tag_list(self):
-        driver = self.driver
-        driver.get("http://www.shapeways.com/model/835204/taphandle.html?key=9ec3dcf7d26711bb0ca53db314ebb550")
+        print "\nRunning the testcase 'Verify product is in tag list'"
+        taphandle = self.taphandle
+        taphandle.load()
         # get the list of tags
-        homebrew_a_tag_elem = driver.find_element_by_xpath("//div[@class='keywords']//a[text() = 'Homebrew']")
-        homebrew_a_tag_elem.click()
-        self.assertIn("Shapeways | Search Results", driver.title)
-        self.assertIn("TapHandle", driver.page_source)
-        self.assertIn("$24.73", driver.page_source)
-        self.assertIn("by ShapewaysCodeTest", driver.page_source)
-        self.assertIn("This is one grumpy taphandle", driver.page_source)
+        print "  Loading the Homebrew tag in the page"
+        taphandle.load_tag_list("Homebrew")
+        print "  Checking the title to see that it is 'Shapeways | Search Results'"
+        self.assertIn("Shapeways | Search Results", taphandle.get_page_title())
+        print "  Checking that the page has 'TapHandle' in it"
+        self.assertIn("TapHandle", taphandle.get_page_source())
+        print "  Checking that the page has '$24.73' in it"
+        self.assertIn("$24.73", taphandle.get_page_source())
+        print "  Checking that the page has 'by ShapewaysCodeTest' in it"
+        self.assertIn("by ShapewaysCodeTest", taphandle.get_page_source())
+        print "  Checking that the page has 'This is one grumpy taphandle' in it"
+        self.assertIn("This is one grumpy taphandle", taphandle.get_page_source())
+        taphandle.close_session()
         
-    def tearDown(self):
-        self.driver.close()
+#     def tearDown(self):
+#         self.driver.close()
 
 if __name__ == "__main__":
     unittest.main()

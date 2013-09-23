@@ -1,7 +1,8 @@
 from selenium import webdriver
-import time
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+import time
+import re
 # class definition
 
 #constructor
@@ -210,3 +211,112 @@ class TapHandle:
         time.sleep(2)
         driver.get(self.taphandle_url)
         
+    def load_materials_dialog(self):
+        driver = self.driver
+        selected_material = "selectedMaterialContent"
+        # get the original material name and price
+        print "    Clicking the materials link whose id is " + selected_material 
+        material_drop_down_elem = driver.find_element_by_id(selected_material)
+        # now click on the material drop down to bring up the list
+        material_drop_down_elem.click()
+    
+    def get_selected_material_name(self):
+        driver = self.driver
+        selected_material = "selectedMaterialContent"
+        selected_material_name_xpath = "//li[@id='selectedMaterialContent']//p"
+        print "    Getting the material name located at " + selected_material_name_xpath
+        # get the name of the material next
+        material_drop_down_elem = driver.find_element_by_id(selected_material)
+        material_elem = material_drop_down_elem.find_element_by_xpath(selected_material_name_xpath)
+        material = material_elem.text
+        return material
+    
+    def get_selected_material_price(self):
+        driver = self.driver
+        # get the original material name and price
+        selected_material = "selectedMaterialContent"
+        selected_price_class = "price"
+        print "    Getting the material class whose class is " + selected_price_class
+        material_drop_down_elem = driver.find_element_by_id(selected_material)
+        # get the price first
+        price_elem = material_drop_down_elem.find_element_by_class_name(selected_price_class)
+        price = price_elem.text
+        return price
+        
+    def select_material_in_list(self, material_id):
+        driver = self.driver
+        material_id = "materialContent" + material_id
+        print "    Getting the material whose id is " + material_id
+        new_material_in_list_elem = driver.find_element_by_id(material_id)
+        new_material_in_list_elem.click()
+        
+    def get_material_name_in_list(self, material_id):
+        driver = self.driver
+        material_id = "materialContent" + material_id
+        new_material_name_xpath = "//li[@id='" + material_id + "']//p"
+        print "    Getting the material name of the material using the xpath " + new_material_name_xpath 
+        new_material_in_list_elem = driver.find_element_by_id(material_id)
+        new_material_name_elem = new_material_in_list_elem.find_element_by_xpath(new_material_name_xpath)
+        new_material_name_in_list = new_material_name_elem.text
+        return new_material_name_in_list
+        
+    def get_material_price_in_list(self, material_id):
+        driver = self.driver
+        material_id = "materialContent" + material_id
+        new_material_in_list_elem = driver.find_element_by_id(material_id)
+        print "    Getting the price of the material whose id is " + material_id
+        new_material_price_elem = new_material_in_list_elem.find_element_by_class_name("price")
+        new_material_price_in_list = new_material_price_elem.text
+        return new_material_price_in_list
+
+    def close_materials_dialog(self):
+        driver = self.driver
+        close_button_xpath = "//span[@id='ui-dialog-title-materialSelect']/following-sibling::a[1]"
+        print "    Clicking the materials dialog box close button located at " + close_button_xpath
+        close_button = driver.find_element_by_xpath(close_button_xpath)
+        close_button.click()
+        
+    def get_permalink(self):
+        driver = self.driver
+        permalink_textbox = "permalinkTextBox"
+        print "    Getting the contents of the permalink textbox whose id is " + permalink_textbox
+        permalink_text_box_elem = driver.find_element_by_id(permalink_textbox)
+        permalink_url = permalink_text_box_elem.get_attribute("value")
+        print "    Permalink url is " + permalink_url
+        return permalink_url
+    
+    def get_see_more_link(self):
+        driver = self.driver
+        see_more_xpath = "//div[@class='see-more']//a"
+        print "    Getting the contents of the see more link"
+        see_more_link_elem = driver.find_element_by_xpath(see_more_xpath)
+        see_more_link_text = see_more_link_elem.text
+        return see_more_link_text
+    
+    def load_related_item(self): 
+        driver = self.driver
+        related_item_xpath = "//div[@id='favoriters']/following-sibling::div[1]/div[@class='grid-view']/div/div"
+        print "    Clicking the related item whose xpath is " + related_item_xpath
+        related_item_div_elem = driver.find_element_by_xpath(related_item_xpath)
+        related_item_div_elem.click()
+        time.sleep(10)
+
+    def get_tag_list(self):
+        driver = self.driver
+        tag_list_xpath =  "//div[@class='keywords']//a"
+        print "    Getting the list of tags located at " + tag_list_xpath
+        tags_elems = driver.find_elements_by_xpath(tag_list_xpath)
+        a_tags = []
+        for a_tag_elem in tags_elems:
+            a_tag_text = a_tag_elem.text
+            a_tag_text = re.sub(',', '', a_tag_text)
+            a_tags.append(a_tag_text)
+        return a_tags
+    
+    def load_tag_list(self, tag_name):
+        driver = self.driver
+        tag_link_xpath = "//div[@class='keywords']//a[text() = '" + tag_name + "']"
+        print "    Clicking the tags link located at " + tag_link_xpath
+        homebrew_a_tag_elem = driver.find_element_by_xpath(tag_link_xpath)
+        homebrew_a_tag_elem.click()
+        time.sleep(2)
